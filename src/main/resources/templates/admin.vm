@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Example App - Help</title>
+  #parse("header-scripts.vm")
+</head>
+<body>
+<div class="container-fluid">
+    #parse("admin/search-box.vm")
+</div>
+<h2>here is a list</h2>
+</body>
+</html>

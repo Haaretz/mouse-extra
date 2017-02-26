@@ -1,0 +1,193 @@
+#set( $collapsibleExtraOfferId = ${math.random(100000,200000)} )
+#set( $collapsibleSubExtraOfferId = ${math.random(100000,200000)} )
+<section id="extra$collapsibleExtraOfferId" data-collapsible-bps="default"
+         class="js-collapsible c-extra-form  o-card  o-collapsible">
+    <h2 class="c-extra-form__title  u-d--f  u-c--text-inverse u-bgc--neutral(jigsass-tint,2)">
+        <span class="u-fxg--1  [ u-p--1 u-ps--2--from-s ]  u-type--delta">$!title
+            <span class="c-extra-form__tagline u-c--text-muted u-fw--400 u-is-hidden--until-l">$!tagline</span>
+        </span>
+        <button type="button" data-jump-offset="-126" data-jump-to="extra$collapsibleExtraOfferId"
+                class="js-collapsible__toggle js-jump-to  o-collapsible__toggle  [ o-btn o-btn--primary ]"
+                aria-controls="collapsible__content-$collapsibleSubExtraOfferId" aria-label="פתח"
+                aria-expanded="true"></button>
+    </h2>
+    <div class="js-collapsible__content o-collapsible__content c-extra-form__content [ u-p--1 u-p--2--from-s ]"
+         id="collapsible__content-$collapsibleSubExtraOfferId" tabindex="-1">
+        <form id="extraForm" class="c-extra-from__form u-autospace--3 js-ajax-form" action="submissions/submit" method="post">
+            <fieldset>
+                <input type="hidden" name="pollContentId" value="$pollContentId">
+                <legend class="c-extra-form__headline u-mb--1 u-fw--700 u-type--epsilon">$!question</legend>
+                <ul class="c-extra-form__answers o-bare-list">
+                    <li>
+                        <label class="o-input--radio" for="extraAnswer1">
+                            <input id="extraAnswer1" class="u-is-visually-hidden" value="answerId1" type="radio"
+                                   name="extraAnswer"
+                                   required="required"><span class="o-input__label">$!answer1</span><span
+                                class="o-input--radio__faux-check" aria-hidden="true"></span></label>
+                    </li>
+                    <li>
+                        <label class="o-input--radio" for="extraAnswer2">
+                            <input id="extraAnswer2" class="u-is-visually-hidden" value="answerId2" type="radio"
+                                   name="extraAnswer"
+                                   required="required"><span class="o-input__label">$!answer2</span><span
+                                class="o-input--radio__faux-check" aria-hidden="true"></span></label>
+                    </li>
+                    <li>
+                        <label class="o-input--radio" for="extraAnswer3">
+                            <input id="extraAnswer3" class="u-is-visually-hidden" value="answerId3" type="radio"
+                                   name="extraAnswer"
+                                   required="required"><span class="o-input__label">$!answer3</span><span
+                                class="o-input--radio__faux-check" aria-hidden="true"></span></label>
+                    </li>
+                    <li>
+                        <label class="o-input--radio" for="extraAnswer4">
+                            <input id="extraAnswer4" class="u-is-visually-hidden" value="answerId4" type="radio"
+                                   name="extraAnswer"
+                                   required="required"><span class="o-input__label">$!answer4</span><span
+                                class="o-input--radio__faux-check" aria-hidden="true"></span></label>
+                    </li>
+                </ul>
+            </fieldset>
+            <fieldset>
+                <legend class="c-extra-form__headline u-mb--1 u-fw--700 u-type--epsilon">פרטים אישיים</legend>
+                <ul class="c-extra-form__details o-bare-list u-autospace--1 u-maw--60--from-m">
+                    <li class="c-extra-form__detail">
+                        <label class="u-d--f"><span class="o-input__label u-fw--700 u-pe--1 u-miw--10"
+                                                    for="extraDetailName">שם: </span><span
+                                class="u-d--b u-fxg--1"><input id="extraDetailName" class="o-input"
+                                                               aria-describedby="extraDetailNameNote" type="text"
+                                                               name="extraDetailName" required="required"><span
+                                id="extraDetailNameNote"
+                                class="o-input__note u-va--t u-type--micro">אנא מלאו שם מלא</span></span>
+                        </label>
+                    </li>
+                    <li class="c-extra-form__detail">
+                        <label class="u-d--f"><span id="extraDetailPhoneLabel"
+                                                    class="c-extra-form__detail-label o-input__label u-fw--700 u-pe--1 u-miw--10"
+                                                    for="extraDetailPhonePrefix">טלפון:</span><span
+                                class="u-d--b u-fxg--1"><span class="c-extra-form__phone o-media o-media--rev"><span
+                                class="o-media__fig"><input id="extraDetailPhone" class="o-input u-ms--1 u-w--8"
+                                                            aria-labeledby="extraDetailPhoneLabel"
+                                                            aria-describedby="extraDetailPhoneNote" type="tel"
+                                                            minlength="2" maxlength="3" name="extraDetailPhonePrefix"
+                                                            pattern="0[23489]|05[02345689]|07[234679]"
+                                                            required="required"></span><span
+                                class="o-media__content"><input id="extraDetailPhone" class="o-input"
+                                                                aria-labeledby="extraDetailPhoneLabel"
+                                                                aria-describedby="extraDetailPhoneNote" type="tel"
+                                                                minlength="7" maxlength="7"
+                                                                pattern="\d{7}"
+                                                                name="extraDetailPhone"
+                                                                required="required"></span></span><span
+                                id="extraDetailPhoneNote" class="o-input__note u-va--t u-type--micro">אנא הזינו מספר טלפון</span></span>
+                        </label>
+                    </li>
+                    <li class="c-extra-form__detail">
+                        <label class="u-d--f"><span class="o-input__label u-fw--700 u-pe--1 u-miw--10"
+                                                    for="extraDetailMail">מייל: </span><span
+                                class="u-d--b u-fxg--1"><input id="extraDetailMail" class="o-input"
+                                                               aria-describedby="extraDetailMailNote" type="email"
+                                                               name="extraDetailMail" required="required"><span
+                                id="extraDetailMailNote" class="o-input__note u-va--t u-type--micro">אנא הזינו כתובת דוא"ל ליצירת קשר</span></span>
+                        </label>
+                    </li>
+                    <li class="c-extra-form__detail">
+                        <div class="u-d--f">
+                            <label id="extraDetailCityAddressLabel" class="o-input__label u-fw--700 u-pe--1 u-miw--10"
+                                   for="extraDetailAddress">כתובת: </label>
+                            <span class="u-d--b u-fxg--1">
+                                <div>
+                                <input id="extraDetailAddress" class="o-input" aria-describedby="extraDetailAddressNote"
+                                       type="text" name="extraDetailAddress" required="required">
+                                    <span id="extraDetailAddressNote" class="o-input__note u-va--t u-type--micro">
+                            אנא הזינו רחוב, מספר בית ומספר דירה
+                                    </span>
+                                </div>
+                                <div>
+                                    <input id="extraDetailCity" class="o-input"
+                                           aria-labeledbedby="extraDetailAddressLabel"
+                                           aria-describedby="extraDetailCityNote" type="text" name="extraDetailCity"
+                                           required="required">
+                                    <span id="extraDetailCityNote" class="o-input__note u-va--t u-type--micro">אנא הזינו עיר</span>
+                                    <script>
+                                        var input = document.getElementById("extraDetailCity");
+                                        function getCitiesList() {
+                                            return new Promise(function (resolve, reject) {
+                                                try {
+                                                    var list = localStorage.getItem('extraDetailCity');
+                                                    if (!list) {
+                                                        fetch('cities.json')
+                                                                .then(
+                                                                        function (response) {
+                                                                            if (response.status !== 200) {
+                                                                                console.log('Looks like there was a problem. Status Code: ' +
+                                                                                        response.status);
+                                                                                reject(response)
+                                                                            }
+
+                                                                            // Examine the text in the response
+                                                                            response.json()
+                                                                                    .then(function (data) {
+                                                                                        var cities = data
+                                                                                        localStorage.setItem('extraDetailCity',cities);
+                                                                                        list = cities;
+                                                                                        resolve(list);
+                                                                                    });
+                                                                        }
+                                                                )
+                                                                .catch(function (err) {
+                                                                    console.log('Fetch Error :-S', err);
+                                                                    reject(err)
+                                                                });
+                                                    }
+                                                    else {
+                                                        resolve(list);
+                                                    }
+                                                }
+                                                catch (e) {
+                                                    reject(e);
+                                                }
+                                            });
+                                        }
+                                        getCitiesList().then(function (cities) {
+                                            new Awesomplete(input, {
+                                                list: cities,
+                                                autoFirst: true,
+                                            });
+                                        });
+                                    </script>
+                                </div>
+                            </span>
+                        </div>
+                    </li>
+                </ul>
+            </fieldset>
+            <fieldset>
+                <ul class="c-extra-form__extras o-bare-list u-autospace--1 u-type--micro">
+                    <li>
+                        <label class="o-input--checkbox" for="extraFormRegulationsCB">
+                            <input id="extraFormRegulationsCB" class="u-is-visually-hidden" type="checkbox"
+                                   required="required"
+                                   name="extraFormRegulationsCB"><span class="o-input__label">קראתי את <button
+                                id="extraFormRegulationsBtn" class="b-txt-link" type="button"
+                                data-htz-dialog-show="extraRegulationsDialog">התקנון</button> ואני מסכים לתנאיו</span><span
+                                class="o-input--checkbox__faux-check" aria-hidden="true"></span></label>
+                    </li>
+                    <li>
+                        <label class="o-input--checkbox" for="extraFormNewsletterCB">
+                            <input id="extraFormNewsletterCB" class="u-is-visually-hidden" type="checkbox"
+                                   name="extraFormNewsletterCB"><span class="o-input__label">מעוניין להרשם לניוזלטר של עכבר העיר ולקבל המלצות, ביקורות ופרסומים בנושאי תרבות,
+בילוי ופנאי</span><span class="o-input--checkbox__faux-check" aria-hidden="true"></span></label>
+                    </li>
+                    <li>
+                        <label class="o-input--checkbox" for="extraFormPerksCB">
+                            <input id="extraFormPerksCB" class="u-is-visually-hidden" type="checkbox"
+                                   name="extraFormPerksCB"><span class="o-input__label">אני מעוניין לקבל במייל הטבות נוספות של עכבר העיר אונליין וכן מידע שיווקי</span><span
+                                class="o-input--checkbox__faux-check" aria-hidden="true"></span></label>
+                    </li>
+                </ul>
+            </fieldset>
+            <button class="c-extra-form__submit [ o-btn o-btn--primary ] u-ph--6" type="submit">שלח</button>
+        </form>
+    </div>
+</section>

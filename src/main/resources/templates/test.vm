@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Page</title>
+  #parse("header-scripts.vm")
+##    <script src="angular.min.js"></script>
+    <link rel="stylesheet" href="css/screen.css"></link>
+
+    <!-- Polyifill Service -->
+    <script src="https://cdn.polyfill.io/v2/polyfill.min.js?features=default,fetch&gated"></script>
+    <!-- Bundles -->
+    <script type="text/javascript" src="js/dist/headBundle.min.js"></script>
+    <script type="text/javascript" src="js/dist/asyncBundle.min.js"></script>
+    <link rel="stylesheet" href="modules/awesomplete/awesomplete.css"/>
+    <script src="modules/awesomplete/awesomplete.min.js"></script>
+</head>
+<body>
+<div class="container-fluid">
+    <div class="container-fluid thumbnail" style="margin-top:20px; padding:20px; box-shadow:#ccc 0 0 15px">
+        <h1> Generates polls </h1>
+    </div>
+    <div class="container-fluid thumbnail" style="margin-top:20px; padding:20px; box-shadow:#ccc 0 0 15px;direction: rtl">
+        #parse("form.vm")
+    </div>
+
+
+    <!-- Modals Slot -->
+    <section id="modals"></section>
+    <!-- Modals Slot end -->
+    <script type="text/javascript" src="js/dist/bodyBundle.min.js"></script>
+    <script type="text/javascript" src="js/ajaxForms.js"></script>
+</body>
+</html>
