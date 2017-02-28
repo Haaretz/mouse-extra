@@ -64,7 +64,7 @@ public class ReportDao {
       " users.email, users.phone_number, users.address_line_street, users.address_line_city, users.newsletter_sub, " +
       "users.perks_sub, submissions.submission_date, submissions.answer_id, submissions.is_win, submissions.user_id" +
       " FROM polls INNER JOIN submissions INNER JOIN users ON polls.poll_content_id = submissions.poll_content_id" +
-      " AND submissions.user_id = users.id WHERE polls.poll_content_id=:pollContentId");
+      " AND submissions.user_id = users.id WHERE (SELECT COUNT(id)=1 FROM submissions WHERE submissions.user_id = users.id and submissions.poll_content_id=polls.poll_content_id) AND polls.poll_content_id=:pollContentId");
 
     sqlQuery.setString("pollContentId", pollContentId);
     List list = sqlQuery.list();

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Areas>
+  <Area id="-1" name="הצג משתמשים באיזור"></Area>
   <Area id="1" name="חיפה והצפון">
     <City id="5">אבו סנאן</City>
     <City id="6">אבטין</City>
