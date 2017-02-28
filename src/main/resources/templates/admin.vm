@@ -1,13 +1,12 @@
 <!DOCTYPE html>
-<html>
+<html ng-app="vk">
 <head>
     <title>Example App - Help</title>
   #parse("header-scripts.vm")
 </head>
-<body>
+<body dir="rtl" lang="he">
 <div class="container-fluid">
     #parse("admin/search-box.vm")
 </div>
-<h2>here is a list</h2>
 </body>
 </html>

@@ -1,4 +1,145 @@
-<div class="container-fluid thumbnail" style="margin-top: 20px; padding:20px; box-shadow:#ccc 0 0 15px">
+<div class="container body-content" ng-controller="SearchController">
+    <form runat="server">
+        <div class="jumbotron">
+            <h1 class="display-3">ממשק שליפת זוכים בעכבר EXTRA</h1>
+
+            <div class="form-inline" mane="extra" >
+                <div class="form-group mx-sm-3">
+                    <input type="text" ng-model="search.searchID" class="form-control" required placeholder="מספר הטבה" ng-disabled="search.searchText" typeahead-editable="false" uib-typeahead="question as question.pollContentId for question in questions | filter:{pollContentId:$viewValue} | limitTo:8" typeahead-min-length="0" typeahead-no-results="noResultsID">
+                    <span ng-if="noResultsID" uib-dropdown uib-dropdown-toggle auto-close="disabled" is-open="true">
+                            <ul class="uib-dropdown-menu">
+                                <li><a href>no results</a></li>
+                            </ul>
+                        </span>
+                </div>
+                <div class="form-group">
+                    <p class="form-control-static">או</p>
+                </div>
+                <div class="form-group mx-sm-3">
+                    <input type="text" ng-model="search.searchText" ng-disabled="search.searchID" uib-typeahead-wait-ms="500" class="form-control" placeholder="שם הטבה" typeahead-editable="false" uib-typeahead="question as question.pollDescription for question in questions | filter:{pollDescription:$viewValue} | limitTo:8" typeahead-min-length="0" typeahead-no-results="noResultsText" />
+                    <span ng-if="noResultsText" uib-dropdown uib-dropdown-toggle auto-close="disabled" is-open="true">
+                            <ul class="uib-dropdown-menu">
+                                <li><a href>no results</a></li>
+                            </ul>
+                        </span>
+                </div>
+                <div class="form-group mx-sm-3">
+                    <button type="submit" class="btn btn-primary" ng-click="submitData(search, 'ajaxResult')">חפש</button>
+                </div>
+
+            </div>
+
+
+        </div>
+    </form>
+    <div class="alert alert-danger" role="alert" style="display:none;">
+        <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+        <span class="sr-only">Error:</span>
+        אין נתונים
+    </div>
+    <div class="panel panel-info" ng-show="responses">
+        <div class="panel-heading">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-5">
+                        <button type="button" class="btn btn-primary mg-left">ייצא רשימת זוכים</button>
+                        <button type="button" ng-click="getexcell()" class="btn btn-primary mg-left">ייצא רשימת עונים</button>
+                        <button type="button" class="btn btn-primary mg-left">עדכן תאריך זכייה</button>
+                    </div>
+                    <div class="col-md-7">
+                        <h3 style="display:inline;padding-left: 25px;color:black;">{{QuestionName}}</h3>
+                        <span> ענו עד כה <span class="label label-info">{{responses.length}}</span></span>
+                        <span> מתוכם ענו נכונה <span class="label label-success">{{CountCorrectAnswers}}</span></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="panel-body">
+            <div class="form-check form-check-inline">
+                <label class="form-check-label">
+                    <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" ng-click="select({'cAnswer':cAnswer})" ng-model="cAnswer" value="{{correctAnswer}}"> הצג תשובות נכונות בלבד
+                </label>
+            </div>
+            <div class="form-check form-check-inline">
+                <label class="form-check-label">
+                    <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" ng-click="select({'cNoWin':cNoWin})" ng-model="cNoWin" value="false"> הצג רק משתמשים שמעולם לא זכו
+                </label>
+            </div>
+            <select class="custom-select" ng-model="areaSelected" ng-options="area as area._name for area in areas" ng-change="makeChanged(areaSelected)">></select>
+            <select class="custom-select" ng-model="citySelected" ng-show="cities" ng-options="city as city.__text for city in cities" ng-change="select(citySelected)"></select>
+            <button type="button" class="btn btn-primary mg-left" ng-click="select({reset:true})">איפוס</button>
+
+            <button type="button" class="btn btn-primary mg-left" data-toggle="modal" data-target="#myModal">זכייה</button>
+            <!-- Modal -->
+            <div class="modal fade" id="myModal" role="dialog">
+                <div class="modal-dialog">
+
+                    <!-- Modal content-->
+
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <div class="bootstrap-dialog-header">
+                                        <div class="bootstrap-dialog-close-button">
+                                            <button class="close"style="float: left!important;" data-dismiss="modal">×</button>
+                                        </div>
+                                        <div class="bootstrap-dialog-title" >בכר קמות זוכים</div>
+                                    </div>
+                                </div>
+
+                                <div class="modal-body">
+                                    <div class="form-inline" >
+
+
+                                        <div class="form-group mx-sm-3">
+                                            <input type="text"   class="form-control" placeholder="קמות" />
+
+                                        </div>
+                                        <div class="form-group mx-sm-3">
+                                            <button type="button" class="btn btn-primary" >שלך</button>
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+
+                                </div>
+                            </div>
+
+                </div>
+            </div>
+            <hr />
+            <table class="table table-hover" ng-model="responses">
+                <thead class="thead-default">
+                <tr style="text-align:right;">
+                    <th style="text-align:right;">שם</th>
+                    <th style="text-align:right;">דוא"ל</th>
+                    <th style="text-align:right;">טלפון</th>
+                    <th style="text-align:right;">כתובת</th>
+                    <th style="text-align:right;">עיר</th>
+                    <th style="text-align:right;">תשובה</th>
+                    <th style="text-align:right;">זכייה</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="response in (filteredItems=(responses  | filter:filter))">
+                    <th style="text-align:right;" scope="row">{{response.name}}</th>
+                    <td ng-bind="response.email"></td>
+                    <td ng-bind="response.phoneNumber"></td>
+                    <td ng-bind="response.addressLineStreet"></td>
+                    <td ng-bind="response.addressLineCity"></td>
+                    <td>{{response.answerId==response.correctAnswer?'נכון':'לא נכון'}}</td>
+                    <td>{{response.isWin==false?'לא זוכה':'זוכה'}}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+
+
+
+<!--<div class="container-fluid thumbnail" style="margin-top: 20px; padding:20px; box-shadow:#ccc 0 0 15px">
     <div class="row">
         <div class="col-xs-2"></div>
         <div class="col-xs-8">
@@ -19,4 +160,4 @@
         </div>
         <div class="col-xs-2"></div>
     </div>
-</div>
+</div>-->
