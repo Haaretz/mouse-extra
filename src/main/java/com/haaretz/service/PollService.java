@@ -9,19 +9,17 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 
 /**
  * Created by elia.grady on 04/01/2017.
+ * A Poll service for communicating with the DAO
  */
 
 @Service
 public class PollService {
 
-
-  static {
-
-  }
 
   @Autowired
   private PollDao pollDao;
@@ -47,15 +45,19 @@ public class PollService {
   }
 
   public Collection<Poll> getAllPolls() {
-    Iterable iterable = pollDao.findAll();
+    Iterable<Poll> iterable = pollDao.findAll();
+    Iterator iterator = iterable.iterator();
     List<Poll> targetCollection = new ArrayList<>();
-    CollectionUtils.addAll(targetCollection, iterable.iterator());
+    while (iterator.hasNext()) {
+      targetCollection.add((Poll) iterator.next());
+    }
+//    CollectionUtils.addAll(targetCollection, iterable.iterator());
     return targetCollection;
   }
 
   public Collection<Poll> getLatestPolls() {
     Sort latestByDate = new Sort("modified");
-    Iterable iterable = pollDao.findAll(latestByDate);
+    Iterable<Poll> iterable = pollDao.findAll(latestByDate);
     List<Poll> targetCollection = new ArrayList<>();
     CollectionUtils.addAll(targetCollection, iterable.iterator());
     return targetCollection;

@@ -56,13 +56,11 @@ public class ReportDao {
 
   public Object getReportForPoll(String pollContentId) {
     SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
-    Session session = sessionFactory.getCurrentSession();
-
-    Transaction tx = session.beginTransaction();
+    Session session = sessionFactory.openSession();
     SQLQuery sqlQuery = session.createSQLQuery("SELECT polls.poll_content_id, polls.question," +
       " polls.correct_answer, polls.answer1, polls.answer2, polls.answer3, polls.answer4, users.name," +
       " users.email, users.phone_number, users.address_line_street, users.address_line_city, users.newsletter_sub," +
-      " users.perks_sub, submissions.id as sub_id, submissions.submission_date, submissions.answer_id, submissions.is_win, submissions.user_id" +
+      " users.perks_sub, submissions.id as sub_id, submissions.submission_date, submissions.answer_id, submissions.is_win as winner, submissions.user_id" +
       " FROM polls INNER JOIN submissions INNER JOIN users ON polls.poll_content_id = submissions.poll_content_id" +
       " AND submissions.user_id = users.id WHERE (SELECT COUNT(id)=1 FROM submissions WHERE submissions.user_id = users.id and submissions.poll_content_id=polls.poll_content_id) AND polls.poll_content_id=:pollContentId");
 
@@ -212,10 +210,12 @@ public class ReportDao {
         this.addressLineCity = (String) o[i];i++;
         this.newsletterSub = (boolean) o[i];i++;
         this.perksSub = (boolean) o[i];i++;
+        //noinspection Since15
         this.sub_id = ((BigInteger) o[i]).longValueExact();i++;
-        this.submissionDate = ((Timestamp) o[i]).toString();i++;
+        this.submissionDate = o[i].toString();i++;
         this.answerId = (int) o[i];i++;
         this.isWin = (boolean) o[i];i++;
+        //noinspection Since15
         this.userId = ((BigInteger) o[i]).longValueExact();
       }
     }

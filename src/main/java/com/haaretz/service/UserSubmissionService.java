@@ -10,6 +10,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
+import java.util.Date;
 
 /**
  * Created by elia.grady on 04/01/2017.
@@ -47,6 +48,7 @@ public class UserSubmissionService {
     UserSubmission userSubmission = userSubmissionForm.getUserSubmission();
     User searchedByPhone = userDao.findByPhoneNumber(userSubmissionForm.getCleanPhoneNumber());
     User user;
+    Date submissionDate = new Date();
     if(searchedByPhone != null) {
       user = searchedByPhone;
       user.setId(searchedByPhone.getId());
@@ -57,6 +59,7 @@ public class UserSubmissionService {
       user.setAddressLineStreet(userSubmissionForm.getExtraDetailAddress());
       user.setEmail(userSubmissionForm.getExtraDetailMail());
       userDao.save(user);
+      userSubmission.setSubmissionDate(submissionDate);
       userSubmission.setUserId(searchedByPhone.getId());
     }
     else {
@@ -69,6 +72,7 @@ public class UserSubmissionService {
       user.setAddressLineStreet(userSubmissionForm.getExtraDetailAddress());
       user.setEmail(userSubmissionForm.getExtraDetailMail());
       userDao.save(user);
+      userSubmission.setSubmissionDate(submissionDate);
       userSubmission.setUserId(user.getId());
     }
     userSubmissionDao.save(userSubmission);

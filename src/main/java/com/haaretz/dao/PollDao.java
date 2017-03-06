@@ -6,12 +6,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.repository.PagingAndSortingRepository;
-
 import javax.transaction.Transactional;
-import java.util.Collection;
 
 /**
  * Created by elia.grady on 08/01/2017.
+ * A Poll Dao
  */
 @Transactional
 public interface PollDao extends PagingAndSortingRepository<Poll, Long> {
@@ -26,6 +25,4 @@ public interface PollDao extends PagingAndSortingRepository<Poll, Long> {
   Iterable<Poll> findAll(Sort sort);
 
   Page<Poll> findAll(Pageable pageable);
-
-  Collection<Poll> findAll();
 }
