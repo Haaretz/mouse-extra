@@ -29,7 +29,7 @@ public class UserSubmission implements Persistable {
   private int answerId;
 
   @NotNull
-  private boolean isWin = false; // Win Marker
+  private boolean isWin; // Win Marker
 
   @CreationTimestamp
   private Date submissionDate;

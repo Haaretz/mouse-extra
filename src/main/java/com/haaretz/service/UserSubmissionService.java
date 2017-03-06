@@ -74,11 +74,20 @@ public class UserSubmissionService {
     userSubmissionDao.save(userSubmission);
   }
 
+  public boolean markUserSubmissionAsLoss(long id) {
+    return markUserSubmission(id, false);
+  }
+
   public boolean markUserSubmissionAsWin(long id) {
+    return markUserSubmission(id, true);
+  }
+
+
+  public boolean markUserSubmission(long id, boolean value) {
     boolean success = false;
-    UserSubmission userSubmission = userSubmissionDao.findOne(id);
+    UserSubmission userSubmission = userSubmissionDao.findOneById(id);
     if(userSubmission != null) {
-      userSubmission.setWin(true);
+      userSubmission.setWin(value);
       userSubmissionDao.save(userSubmission);
       success = true;
     }

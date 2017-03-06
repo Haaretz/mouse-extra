@@ -3,14 +3,14 @@ package com.haaretz.dao;
 import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
 import com.haaretz.HibernateUtil;
-import org.hibernate.SQLQuery;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
-import org.springframework.stereotype.Repository;
+import com.haaretz.entities.Poll;
+import com.haaretz.entities.User;
+import com.haaretz.entities.UserFormSubmission;
+import com.haaretz.entities.UserSubmission;
+import org.hibernate.*;
+import org.hibernate.type.BooleanType;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.TypedQuery;
 import java.lang.reflect.Type;
 import java.math.BigInteger;
 import java.sql.Timestamp;
@@ -61,8 +61,8 @@ public class ReportDao {
     Transaction tx = session.beginTransaction();
     SQLQuery sqlQuery = session.createSQLQuery("SELECT polls.poll_content_id, polls.question," +
       " polls.correct_answer, polls.answer1, polls.answer2, polls.answer3, polls.answer4, users.name," +
-      " users.email, users.phone_number, users.address_line_street, users.address_line_city, users.newsletter_sub, " +
-      "users.perks_sub, submissions.submission_date, submissions.answer_id, submissions.is_win, submissions.user_id" +
+      " users.email, users.phone_number, users.address_line_street, users.address_line_city, users.newsletter_sub," +
+      " users.perks_sub, submissions.id as sub_id, submissions.submission_date, submissions.answer_id, submissions.is_win, submissions.user_id" +
       " FROM polls INNER JOIN submissions INNER JOIN users ON polls.poll_content_id = submissions.poll_content_id" +
       " AND submissions.user_id = users.id WHERE (SELECT COUNT(id)=1 FROM submissions WHERE submissions.user_id = users.id and submissions.poll_content_id=polls.poll_content_id) AND polls.poll_content_id=:pollContentId");
 
@@ -170,6 +170,8 @@ public class ReportDao {
 
 
   private class ReportLine {
+
+    private long sub_id;
     private String pollContentId;
     private String question;
     private int correctAnswer;
@@ -210,6 +212,7 @@ public class ReportDao {
         this.addressLineCity = (String) o[i];i++;
         this.newsletterSub = (boolean) o[i];i++;
         this.perksSub = (boolean) o[i];i++;
+        this.sub_id = ((BigInteger) o[i]).longValueExact();i++;
         this.submissionDate = ((Timestamp) o[i]).toString();i++;
         this.answerId = (int) o[i];i++;
         this.isWin = (boolean) o[i];i++;
@@ -360,6 +363,14 @@ public class ReportDao {
     public void setUserId(long userId) {
       this.userId = userId;
     }
+
+    public long getSubmissionId() {
+      return sub_id;
+    }
+
+    public void setSub_id(long sub_id) {
+      this.sub_id = sub_id;
+    }
   }
 
   private class ReportLineSerializer implements JsonSerializer<ReportLine> {
@@ -402,10 +413,12 @@ public class ReportDao {
       jsonObject.addProperty("addressLineCity", reportLine.getAddressLineCity());
       jsonObject.addProperty("newsletterSub", reportLine.isNewsletterSub());
       jsonObject.addProperty("perksSub", reportLine.isPerksSub());
+      jsonObject.addProperty("sub_id", reportLine.getSubmissionId());
       jsonObject.addProperty("submissionDate", reportLine.getSubmissionDate());
       jsonObject.addProperty("answerId", reportLine.getAnswerId());
       jsonObject.addProperty("isWin", reportLine.isWin());
       jsonObject.addProperty("userId", reportLine.getUserId());
+
       return jsonObject;
     }
   }

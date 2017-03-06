@@ -32,7 +32,7 @@
 
         </div>
     </form>
-    <div class="alert alert-danger" role="alert" style="display:none;">
+    <div class="alert alert-danger" role="alert" style="display: none;" >
         <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
         <span class="sr-only">Error:</span>
         אין נתונים
@@ -43,33 +43,51 @@
                 <div class="row">
                     <div class="col-md-5">
                         <button type="button" class="btn btn-primary mg-left">ייצא רשימת זוכים</button>
-                        <button type="button" ng-click="getexcell()" class="btn btn-primary mg-left">ייצא רשימת עונים</button>
+                        <button type="button" ng-click="getexcell()" class="btn btn-primary mg-left">ייצא רשימת עונים Excel</button>
                         <button type="button" class="btn btn-primary mg-left">עדכן תאריך זכייה</button>
                     </div>
                     <div class="col-md-7">
                         <h3 style="display:inline;padding-left: 25px;color:black;">{{QuestionName}}</h3>
-                        <span> ענו עד כה <span class="label label-info">{{responses.length}}</span></span>
+                        <span> ענו עד כה <span class="label label-info">{{CountUsers}}</span></span>
                         <span> מתוכם ענו נכונה <span class="label label-success">{{CountCorrectAnswers}}</span></span>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="panel-body">
+        <div class="panel-body" ng-model="responses">
+            <div class="container">
             <div class="form-check form-check-inline">
                 <label class="form-check-label">
                     <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" ng-click="select({'cAnswer':cAnswer})" ng-model="cAnswer" value="{{correctAnswer}}"> הצג תשובות נכונות בלבד
                 </label>
             </div>
-            <div class="form-check form-check-inline">
+
+
+            <div class="form-check form-check-inline" style="display: none;">
                 <label class="form-check-label">
                     <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" ng-click="select({'cNoWin':cNoWin})" ng-model="cNoWin" value="false"> הצג רק משתמשים שמעולם לא זכו
                 </label>
             </div>
+            <div class="form-check form-check-inline">
             <select class="custom-select" ng-model="areaSelected" ng-options="area as area._name for area in areas" ng-change="makeChanged(areaSelected)">></select>
-            <select class="custom-select" ng-model="citySelected" ng-show="cities" ng-options="city as city.__text for city in cities" ng-change="select(citySelected)"></select>
-            <button type="button" class="btn btn-primary mg-left" ng-click="select({reset:true})">איפוס</button>
+            <select class="custom-select" ng-model="citySelected" ng-show="cities" ng-options="city as city.__text for city in cities" ng-change="select(citySelected)" ></select>
+            </div>
+            <div class="form-check form-check-inline">
+                <div class="form-inline" >
+                    <div class="form-group mx-sm-3">
+                        <input type="text" ng-model="winCount" style="width: 55px;" class="form-control" placeholder="כמות" />
+                    </div>
+                    <div class="form-group mx-sm-3">
+                        <button type="button" ng-click="select({'arr':filteredItems,'count':winCount})"   class="btn btn-primary" >כמות זוכים</button>
+                    </div>
 
-            <button type="button" class="btn btn-primary mg-left" data-toggle="modal" data-target="#myModal">זכייה</button>
+                </div>
+
+            </div>
+            <button type="button" class="btn btn-primary mg-left" ng-click="select({'reset':true})">איפוס</button>
+
+            <button type="button" class="btn btn-primary mg-left" data-toggle="modal" data-target="#myModal" style="display: none;">זכייה</button>
+
             <!-- Modal -->
             <div class="modal fade" id="myModal" role="dialog">
                 <div class="modal-dialog">
@@ -82,7 +100,7 @@
                                         <div class="bootstrap-dialog-close-button">
                                             <button class="close"style="float: left!important;" data-dismiss="modal">×</button>
                                         </div>
-                                        <div class="bootstrap-dialog-title" >בכר קמות זוכים</div>
+                                        <div class="bootstrap-dialog-title" >בכר כמות זוכים</div>
                                     </div>
                                 </div>
 
@@ -91,24 +109,42 @@
 
 
                                         <div class="form-group mx-sm-3">
-                                            <input type="text"   class="form-control" placeholder="קמות" />
+                                            <input type="text" ng-model="winCount"  class="form-control" placeholder="כמות" />
 
                                         </div>
                                         <div class="form-group mx-sm-3">
-                                            <button type="button" class="btn btn-primary" >שלך</button>
+                                            <button type="button" ng-click="setWinCount(winCount)"  class="btn btn-primary" >שלח</button>
                                         </div>
 
                                     </div>
                                 </div>
                                 <div class="modal-footer">
+                                    <table class="table table-hover" ng-show="winers">
+                                        <thead class="thead-default">
+                                        <tr style="text-align:right;">
+                                            <th style="text-align:right;">שם</th>
+                                            <th style="text-align:right;">דוא"ל</th>
+                                            <th style="text-align:right;">טלפון</th>
 
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr ng-repeat="response in winers">
+                                            <th style="text-align:right;" scope="row" data-sub_id="{{response.sub_id}}" data-userId="{{response.userId}}">{{response.name}}</th>
+                                            <td ng-bind="response.email"></td>
+                                            <td ng-bind="response.phoneNumber"></td>
+
+                                        </tr>
+                                        </tbody>
+                                    </table>
                                 </div>
                             </div>
 
                 </div>
             </div>
+         </div>
             <hr />
-            <table class="table table-hover" ng-model="responses">
+            <table class="table table-hover" >
                 <thead class="thead-default">
                 <tr style="text-align:right;">
                     <th style="text-align:right;">שם</th>
@@ -118,17 +154,19 @@
                     <th style="text-align:right;">עיר</th>
                     <th style="text-align:right;">תשובה</th>
                     <th style="text-align:right;">זכייה</th>
+                    <th>בכר מאומד לזכיה</th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr ng-repeat="response in (filteredItems=(responses  | filter:filter))">
-                    <th style="text-align:right;" scope="row">{{response.name}}</th>
+                <tr ng-repeat="response in (filteredItems=(responses  | filter:filter ))" ng-init="rowIndex = $index">
+                    <th style="text-align:right;" scope="row" data-sub_id="{{response.sub_id}}" data-userId="{{response.userId}}">{{response.name}}</th>
                     <td ng-bind="response.email"></td>
                     <td ng-bind="response.phoneNumber"></td>
                     <td ng-bind="response.addressLineStreet"></td>
                     <td ng-bind="response.addressLineCity"></td>
                     <td>{{response.answerId==response.correctAnswer?'נכון':'לא נכון'}}</td>
                     <td>{{response.isWin==false?'לא זוכה':'זוכה'}}</td>
+                    <td style="text-align: center;"><input type="checkbox" value="{{rowIndex}}" ng-click="setStepToWin($event,rowIndex)"/> </td>
                 </tr>
                 </tbody>
             </table>

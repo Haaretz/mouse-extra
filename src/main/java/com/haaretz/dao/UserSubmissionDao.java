@@ -22,6 +22,8 @@ public interface UserSubmissionDao extends PagingAndSortingRepository<UserSubmis
 
   Collection<UserSubmission> findAll(Sort sort);
 
+  UserSubmission findOneById(Long id);
+
   UserSubmission findOneByPollContentId(String pollContentId);
 
   Collection<UserSubmission> findAllByPollContentId(String pollContentId);

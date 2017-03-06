@@ -27,6 +27,46 @@ var app=angular.module("vk", ['ui.bootstrap', 'ngAnimate'])
      $scope.ByID = [];
      }
      });*/
+    $scope.stepToWiners;
+    $scope.winers;
+    $scope.setStepToWin = function (action,id) {
+        id= parseInt(id);
+        var checked=action.currentTarget['checked'];
+        $scope.stepToWiners=[];
+        if(count!==undefined  && typeof(count) ==="number") {
+            if ($scope.filteredItems !== undefined) {
+                for (var i = 0, len = count; i < len; i++) {
+                    var ranItem = 0;
+                    ranItem = Math.floor(Math.random() * $scope.filteredItems.length);
+                    if ($scope.filteredItems[ranItem].isWin == 0) {
+                        $scope.filteredItems[ranItem].isWin = 1;
+                        var pollId = $scope.filteredItems[ranItem].sub_id;
+                        var remoteService = 'http://localhost:8080/extra/submissions/mark-win/';
+                        $scope.winers.push($scope.filteredItems[ranItem]);
+                        $scope.setWin(remoteService,pollId);
+                    }
+                }
+
+            }
+        }
+    };
+    $scope.setWin=function(url,id){
+        $http({
+            method: 'GET',
+            url: url+id,
+            cache: false
+        }).then(function (response) {
+                console.log("status:" + response.status);
+        }).catch(function (response) {
+                console.error('Error occurred:', response.status, response.data);
+        }).finally(function () {
+                console.log("Task Finished."+url+id);
+         });
+    };
+    $scope.setWinCount = function (count) {
+        count= parseInt(count);
+       return count;
+    };
     $scope.submitData = function (search, resultVarName) {
         if (search !== undefined && search.searchID !== undefined && search.searchID.pollContentId !== undefined) {
             $scope.config = search.searchID.pollContentId;
@@ -45,6 +85,7 @@ var app=angular.module("vk", ['ui.bootstrap', 'ngAnimate'])
             $scope.QuestionName = $scope.responses[0].question;
             $scope.correctAnswer = $scope.responses[0].correctAnswer;
             $scope.CountCorrectAnswers = 0;
+            $scope.CountUsers = $scope.responses.length;
             angular.forEach($scope.responses, function (value, key) {
                 if (value.answerId == value.correctAnswer)
                     $scope.CountCorrectAnswers = $scope.CountCorrectAnswers + 1;
@@ -91,13 +132,54 @@ var app=angular.module("vk", ['ui.bootstrap', 'ngAnimate'])
         if(select.cAnswer!==undefined){
             $scope.filter = {'answerId':select.cAnswer};
         }
-        else if(select.cNoWin!==undefined){
-            $scope.filter = {'isWin':select.cNoWin};
-        } else if (select.reset !== undefined) {
-            $scope.filter = {};
+        else if(select.cNoWin!==undefined) {
+            $scope.filter = {'isWin': select.cNoWin};
         }
         else if (select !== undefined && select.__text!=undefined) {
             $scope.filter = { 'addressLineCity': select.__text };
+        }
+        else if (select !== undefined && select.count!=undefined && select.arr!==undefined) {
+                var count = parseInt(select.count);
+                var temp = [];
+                if (count !== undefined && typeof(count) === "number") {
+                    if (select.arr !== undefined) {
+                        for (var i = 0, len = count; i < len; i++) {
+                            var ranItem = 0;
+                            ranItem = Math.floor(Math.random() * (1+select.arr.length-1));
+                            if(select.arr[ranItem]!==undefined) {
+                                temp.push(select.arr[ranItem])
+                                delete select.arr[ranItem];
+                            }else{
+                                ranItem = Math.floor(Math.random() * (1+select.arr.length-1));
+                                temp.push(select.arr[ranItem])
+                                delete select.arr[ranItem];
+                            }
+                        }
+                    }
+                }
+                 //$scope.filter = {};
+                 $scope.responses = $scope.filteredItems = temp;
+                // $scope.filteredItems=temp;
+                // return $scope.responses;
+
+        }
+        else if (select !== undefined && select.reset!=undefined && $scope.config!==undefined) {
+            $scope.filter = {};
+            $http.get('/extra/report/' + $scope.config).then(function (response) {
+                $scope.responses = response.data;
+                $scope.QuestionName = $scope.responses[0].question;
+                $scope.correctAnswer = $scope.responses[0].correctAnswer;
+                $scope.CountCorrectAnswers = 0;
+                angular.forEach($scope.responses, function (value, key) {
+                    if (value.answerId == value.correctAnswer)
+                        $scope.CountCorrectAnswers = $scope.CountCorrectAnswers + 1;
+                });
+                console.log("status:" + response.status);
+            }).catch(function (response) {
+                console.error('Error occurred:', response.status, response.data);
+            }).finally(function () {
+                console.log("Task Finished.");
+            });
         }
         else {
             $scope.filter = {};
@@ -110,40 +192,16 @@ var app=angular.module("vk", ['ui.bootstrap', 'ngAnimate'])
             items.filter(function (item) {
                 delete item['$$hashKey'];
             });
-            JSONToCSVConvertor(items, 'data', true);
+            JSONToCSVConvertor(items, $scope.QuestionName, true);
         }
     };
+
 }]);
 function JSONToCSVConvertor(JSONData, ReportTitle, ShowLabel) {
     // Test script to generate a file from JavaScript such
     // that MS Excel will honor non-ASCII characters.
 
     var dataJson = JSONData;
-
-    // Simple type mapping; dates can be hard
-    // and I would prefer to simply use `datevalue`
-    // ... you could even add the formula in here.
-    var testTypes = {
-        "pollContentId": "Number",
-        "question": "String",
-        "correctAnswer": "Number",
-        "answer1": "String",
-        "answer2": "String",
-        "answer3": "String",
-        "answer4": "String",
-        "name": "String",
-        "email": "String",
-        "phoneNumber": "String",
-        "addressLineStreet": "String",
-        "addressLineCity": "String",
-        "newsletterSub": "String",
-        "perksSub": "String",
-        "submissionDate": "String",
-        "answerId": "Number",
-        "isWin": "String",
-        "userId": "Number",
-        "$$hashKey": "String"
-    };
 
     var emitXmlHeader = function () {
         var headerRow = '<ss:Row>\n';
@@ -204,7 +262,7 @@ function JSONToCSVConvertor(JSONData, ReportTitle, ShowLabel) {
         document.body.removeChild(a);
     };
 
-    download(jsonToSsXml(dataJson), 'report_' + GetFormattedDate() + '.xls', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+    download(jsonToSsXml(dataJson), ReportTitle+'_' + GetFormattedDate() + '.xls', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
 }
 
 function GetFormattedDate() {

@@ -51,6 +51,11 @@ public class UserSubmissionsController {
     return userSubmissionService.markUserSubmissionAsWin(Long.parseLong(id));
   }
 
+  @RequestMapping(value = "mark-loss/{id}", method = RequestMethod.GET)
+  public boolean updateUserSubmissionLoss(@PathVariable("id") String id) {
+    return userSubmissionService.markUserSubmissionAsLoss(Long.parseLong(id));
+  }
+
 
 
 }
